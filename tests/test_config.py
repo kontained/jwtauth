@@ -1,23 +1,21 @@
 import unittest
-from application import create_app
 from config import Config
 
 
 class TestDevelopmentConfig(unittest.TestCase):
     def setUp(self):
-        developmentConfig = Config()
-        developmentConfig.FLASK_DEBUG = True
-        developmentConfig.SECRET_KEY = '123456789'
-        self.app = create_app(developmentConfig)
+        self.developmentConfig = Config()
+        self.developmentConfig.FLASK_DEBUG = True
+        self.developmentConfig.SECRET_KEY = '123456789'
 
-    def test_app_is_development(self):
-        self.assertTrue(self.app.config['FLASK_DEBUG'])
+    def test_config_flask_development(self):
+        self.assertTrue(self.developmentConfig.FLASK_DEBUG)
 
-    def test_app_secret_key(self):
-        self.assertTrue(self.app.config['SECRET_KEY'] == '123456789')
+    def test_config_secret_key(self):
+        self.assertTrue(self.developmentConfig.SECRET_KEY == '123456789')
 
-    def test_app_sqlite_database_uri(self):
-        self.assertIsNotNone(self.app.config['SQLALCHEMY_DATABASE_URI'])
+    def test_config_sqlite_database_uri(self):
+        self.assertIsNotNone(self.developmentConfig.SQLALCHEMY_DATABASE_URI)
 
-    def test_app_creation(self):
-        self.assertIsNotNone(self.app)
+    def test_config_sqlalchemy_track_modifications(self):
+        self.assertFalse(self.developmentConfig.SQLALCHEMY_TRACK_MODIFICATIONS)

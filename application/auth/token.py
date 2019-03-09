@@ -1,15 +1,18 @@
-from datetime import datetime
-from application import db
+from datetime import datetime, timedelta
+import jwt
+from flask import current_app
+from application.auth.user import User
 
 
-class Token(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, index=True, nullable=False)
-    token = db.Column(db.String(500), unique=True, nullable=False)
-    time_issued = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    time_expired = db.Column(db.DateTime, index=True)
-    time_blacklisted = db.Column(db.DateTime, index=True)
+def create_user_token(user):
+    payload = {
+        'exp': datetime.utcnow() + timedelta(days=1),
+        'iat': datetime.utcnow(),
+        'sub': user.id
+    }
 
-    def __repr__(self):
-        return '<id: {} token: {} time_issued: {} time_expired: {} time_blacklisted: {}' \
-            .format(self.id, self.token, self.time_issued, self.time_expired, self.time_blacklisted)
+    return jwt.encode(
+        payload,
+        current_app.config.get('SECRET_KEY'),
+        algorithm='HS256'
+    )
