@@ -15,10 +15,9 @@ class AuthenticationResponse():
 
 class Authentication():
     def register_user(self, post_data):
-        user = User.query.filter_by(username=post_data.get('username')).first()
-
-        if not user:
-            try:
+        try:
+            user = User.query.filter_by(username=post_data.get('username')).first()
+            if not user:
                 user = User(
                     username=post_data.get('username'),
                     password_hash=generate_password_hash(
@@ -32,23 +31,27 @@ class Authentication():
                     success=True,
                     token=create_user_token(user)
                 )
-            except Exception as e:
+            else:
                 return AuthenticationResponse(
                     False,
-                    str(e)
+                    'An account already exists with that username!'
                 )
-        else:
+        except Exception as e:
             return AuthenticationResponse(
-                False,
-                'An account already exists with that username!'
+                    False,
+                    str(e)
             )
 
     def login(self, post_data):
-        user = User.query.filter_by(username=post_data.get('username')).first()
-
         try:
-            if user and check_password_hash(user.password, post_data.get('password')):
-                pass
+            user = User.query.filter_by(
+                username=post_data.get('username')).first()
+
+            if user and check_password_hash(user.password_hash, post_data.get('password')):
+                return AuthenticationResponse(
+                    success=True,
+                    token=create_user_token(user)
+                )
             else:
                 return AuthenticationResponse(
                     False,

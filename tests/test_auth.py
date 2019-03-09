@@ -47,7 +47,7 @@ class TestAuthentication(unittest.TestCase):
         self.assertFalse(result.success)
         self.assertIsNotNone(result.message)
 
-    def test_authentcation_register_user(self):
+    def test_authentication_register_user(self):
         input = {
             'username': 'test',
             'password': 'test'
@@ -76,3 +76,15 @@ class TestAuthentication(unittest.TestCase):
 
         self.assertTrue(isinstance(result, AuthenticationResponse))
         self.assertFalse(result.success)
+    
+    def test_authentication_login(self):
+        input = {
+            'username': 'test',
+            'password': 'test'
+        }
+
+        self.target.register_user(input)
+        result = self.target.login(input)
+
+        self.assertTrue(isinstance(result, AuthenticationResponse))
+        self.assertTrue(result.success)
