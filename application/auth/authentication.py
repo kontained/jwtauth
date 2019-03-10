@@ -3,7 +3,7 @@ import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
 from application.auth.user import User
-from application.auth.token import create_user_token
+from application.auth.token_factory import create_user_token
 
 
 class AuthenticationResponse():
@@ -16,7 +16,9 @@ class AuthenticationResponse():
 class Authentication():
     def register_user(self, post_data):
         try:
-            user = User.query.filter_by(username=post_data.get('username')).first()
+            user = User.query.filter_by(
+                username=post_data.get('username')).first()
+
             if not user:
                 user = User(
                     username=post_data.get('username'),
@@ -37,9 +39,10 @@ class Authentication():
                     'An account already exists with that username!'
                 )
         except Exception as e:
+            db.session.rollback()
             return AuthenticationResponse(
-                    False,
-                    str(e)
+                False,
+                str(e)
             )
 
     def login(self, post_data):

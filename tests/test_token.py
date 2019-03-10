@@ -1,7 +1,7 @@
 import unittest
 from config import Config
 from application import create_app
-from application.auth.token import create_user_token
+from application.auth.token_factory import create_user_token
 from application.auth.user import User
 
 
