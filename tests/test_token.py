@@ -10,6 +10,7 @@ class TestToken(unittest.TestCase):
         developmentConfig = Config()
         developmentConfig.FLASK_DEBUG = True
         developmentConfig.SECRET_KEY = '123456789'
+        developmentConfig.SQLALCHEMY_DATABASE_URI = 'sqlite://'
         self.app = create_app(developmentConfig)
         self.app_context = self.app.app_context()
         self.app_context.push()

@@ -1,4 +1,5 @@
 import jwt
+import traceback
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
@@ -11,6 +12,13 @@ class AuthenticationResponse():
         self.success = success
         self.message = message
         self.token = token
+
+    def to_json(self):
+        return {
+            'success': self.success,
+            'message': self.message,
+            'token': self.token.decode() if self.token is not None else ''
+        }
 
 
 class Authentication():
@@ -63,5 +71,5 @@ class Authentication():
         except Exception as e:
             return AuthenticationResponse(
                 False,
-                str(e)
+                traceback.format_exc()
             )

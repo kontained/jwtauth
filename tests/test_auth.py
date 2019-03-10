@@ -12,6 +12,7 @@ class TestAuthentication(unittest.TestCase):
         developmentConfig = Config()
         developmentConfig.FLASK_DEBUG = True
         developmentConfig.SECRET_KEY = '123456789'
+        developmentConfig.SQLALCHEMY_DATABASE_URI = 'sqlite://'
         self.app = create_app(developmentConfig)
         self.app_context = self.app.app_context()
         self.app_context.push()
@@ -75,6 +76,8 @@ class TestAuthentication(unittest.TestCase):
         }
 
         result = self.target.register_user(input)
+
+        json_response = result.to_json()
 
         self.assertTrue(isinstance(result, AuthenticationResponse))
 
