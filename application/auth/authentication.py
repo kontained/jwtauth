@@ -1,5 +1,4 @@
 import jwt
-import traceback
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
@@ -71,5 +70,5 @@ class Authentication():
         except Exception as e:
             return AuthenticationResponse(
                 False,
-                traceback.format_exc()
+                str(e)
             )
