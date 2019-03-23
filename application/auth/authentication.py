@@ -2,8 +2,8 @@ import jwt
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
-from application.auth.user import User
-from application.auth.token_factory import create_user_token
+from .user import User
+from .token_factory import create_user_token
 
 
 class AuthenticationResponse():

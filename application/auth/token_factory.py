@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import jwt
 from flask import current_app
-from application.auth.user import User
+from .user import User
 
 
 def create_user_token(user):

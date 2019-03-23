@@ -11,5 +11,4 @@ def create_database():
 
 
 if __name__ == '__main__':
-    os.environ.putenv('SECRET_KEY', '123456789')
     create_database()

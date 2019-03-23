@@ -1,6 +1,6 @@
-from application.auth import auth_blueprint
-from application.auth.user import User
-from application.auth.authentication import Authentication
+from . import auth_blueprint
+from .user import User
+from .authentication import Authentication
 from flask import request, jsonify
 
 
