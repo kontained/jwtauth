@@ -16,3 +16,10 @@ def create_user_token(user):
         current_app.config.get('SECRET_KEY'),
         algorithm='HS256'
     )
+
+
+def validate_user_token(token):
+    return jwt.decode(
+        token,
+        current_app.config.get('SECRET_KEY'),
+        algorithms=['HS256'])
