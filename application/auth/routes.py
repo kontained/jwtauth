@@ -6,21 +6,27 @@ from flask import request, jsonify
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register():
-    auth = Authentication()
+    try:
+        auth = Authentication()
 
-    post_data = request.get_json()
+        post_data = request.get_json()
 
-    response = auth.register_user(post_data)
+        response = auth.register_user(post_data)
 
-    return jsonify(response.to_json())
+        return jsonify(response.to_json())
+    except Exception as e:
+        pass
 
 
 @auth_blueprint.route('/login', methods=['POST'])
 def login():
-    auth = Authentication()
+    try:
+        auth = Authentication()
 
-    post_data = request.get_json()
+        post_data = request.get_json()
 
-    response = auth.login(post_data)
+        response = auth.login(post_data)
 
-    return jsonify(response.to_json())
+        return jsonify(response.to_json())
+    except Exception as e:
+        pass
