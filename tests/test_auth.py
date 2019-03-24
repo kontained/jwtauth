@@ -3,7 +3,7 @@ from unittest import mock
 from config import Config
 from application import db, create_app
 from application.auth.user import User
-from application.auth.authentication import Authentication, AuthenticationResponse
+from application.auth.authentication import register_user, login_user, AuthenticationResponse
 
 
 class TestAuthentication(unittest.TestCase):
@@ -17,7 +17,6 @@ class TestAuthentication(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        self.target = Authentication()
 
     def setUp(self):
         User.query.delete()
@@ -29,16 +28,13 @@ class TestAuthentication(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_authentication_creation(self):
-        self.assertIsNotNone(self.target)
-
     def test_authentication_register_user_no_username(self):
         input = {
             'password': 'test'
         }
 
         with self.assertRaises(Exception):
-            self.target.register_user(input)
+            register_user(input)
 
     def test_authentication_register_user_no_password(self):
         input = {
@@ -46,7 +42,7 @@ class TestAuthentication(unittest.TestCase):
         }
 
         with self.assertRaises(Exception):
-            self.target.register_user(input)
+            register_user(input)
 
     @mock.patch('application.auth.authentication.create_user_token')
     def test_authentication_token_factory_raise_exception(self, mock_token_factory):
@@ -58,7 +54,7 @@ class TestAuthentication(unittest.TestCase):
         mock_token_factory.side_effect = ValueError('test')
 
         with self.assertRaises(Exception):
-            self.target.register_user(input)
+            register_user(input)
 
     def test_authentication_register_user(self):
         input = {
@@ -66,7 +62,7 @@ class TestAuthentication(unittest.TestCase):
             'password': 'test'
         }
 
-        result = self.target.register_user(input)
+        result = register_user(input)
 
         self.assertTrue(isinstance(result, AuthenticationResponse))
 
@@ -76,7 +72,7 @@ class TestAuthentication(unittest.TestCase):
         }
 
         with self.assertRaises(Exception):
-            self.target.login(input)
+            login_user(input)
 
     def test_authentication_login_no_password(self):
         input = {
@@ -84,7 +80,7 @@ class TestAuthentication(unittest.TestCase):
         }
 
         with self.assertRaises(Exception):
-            self.target.login(input)
+            login_user(input)
 
     def test_authentication_login(self):
         input = {
@@ -92,8 +88,8 @@ class TestAuthentication(unittest.TestCase):
             'password': 'test'
         }
 
-        self.target.register_user(input)
-        result = self.target.login(input)
+        register_user(input)
+        result = login_user(input)
 
         self.assertTrue(isinstance(result, AuthenticationResponse))
         self.assertTrue(result.success)

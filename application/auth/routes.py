@@ -1,17 +1,15 @@
 from . import auth_blueprint
 from .user import User
-from .authentication import Authentication
+from .authentication import register_user, login_user
 from flask import request, jsonify
 
 
 @auth_blueprint.route('/register', methods=['POST'])
 def register():
     try:
-        auth = Authentication()
-
         post_data = request.get_json()
 
-        response = auth.register_user(post_data)
+        response = register_user(post_data)
 
         return jsonify(response.to_json())
     except Exception as e:
@@ -21,11 +19,9 @@ def register():
 @auth_blueprint.route('/login', methods=['POST'])
 def login():
     try:
-        auth = Authentication()
-
         post_data = request.get_json()
 
-        response = auth.login(post_data)
+        response = login_user(post_data)
 
         return jsonify(response.to_json())
     except Exception as e:

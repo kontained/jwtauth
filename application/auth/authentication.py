@@ -21,47 +21,47 @@ class AuthenticationResponse():
         }
 
 
-class Authentication():
-    def register_user(self, post_data):
-        try:
-            user = User.query.filter_by(
-                username=post_data.get('username')).first()
+def register_user(post_data):
+    try:
+        user = User.query.filter_by(
+            username=post_data.get('username')).first()
 
-            if not user:
-                user = User(
-                    username=post_data.get('username'),
-                    password_hash=generate_password_hash(
-                        post_data.get('password'))
-                )
+        if not user:
+            user = User(
+                username=post_data.get('username'),
+                password_hash=generate_password_hash(
+                    post_data.get('password'))
+            )
 
-                db.session.add(user)
-                db.session.commit()
+            db.session.add(user)
+            db.session.commit()
 
-                return AuthenticationResponse(
-                    success=True,
-                    token=create_user_token(user)
-                )
-            else:
-                raise AccountAlreadyExistsError(
-                    'An account already exists with that username!'
-                )
-        except Exception as e:
-            db.session.rollback()
-            raise
+            return AuthenticationResponse(
+                success=True,
+                token=create_user_token(user)
+            )
+        else:
+            raise AccountAlreadyExistsError(
+                'An account already exists with that username!'
+            )
+    except Exception as e:
+        db.session.rollback()
+        raise
 
-    def login(self, post_data):
-        try:
-            user = User.query.filter_by(
-                username=post_data.get('username')).first()
 
-            if user and check_password_hash(user.password_hash, post_data.get('password')):
-                return AuthenticationResponse(
-                    success=True,
-                    token=create_user_token(user)
-                )
-            else:
-                raise AuthenticationError(
-                    'Account could not be authenticated at this time.'
-                )
-        except Exception as e:
-            raise
+def login_user(post_data):
+    try:
+        user = User.query.filter_by(
+            username=post_data.get('username')).first()
+
+        if user and check_password_hash(user.password_hash, post_data.get('password')):
+            return AuthenticationResponse(
+                success=True,
+                token=create_user_token(user)
+            )
+        else:
+            raise AuthenticationError(
+                'Account could not be authenticated at this time.'
+            )
+    except Exception as e:
+        raise
