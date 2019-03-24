@@ -21,7 +21,7 @@ def handle_authentication_error(error):
             'message': 'Account could not be authenticated.'
         }
     )
-    response.status_code = 403
+    response.status_code = 401
     return response
 
 
@@ -29,8 +29,19 @@ def handle_authentication_error(error):
 def handle_exception(error):
     response = jsonify(
         {
-            'message': 'Internal Server Error.'
+            'message': 'Internal server error.'
         }
     )
     response.status_code = 500
+    return response
+
+
+@errors_blueprint.app_errorhandler(404)
+def handle_not_found(error):
+    response = jsonify(
+        {
+            'message': 'Not found.'
+        }
+    )
+    response.status_code = 404
     return response
