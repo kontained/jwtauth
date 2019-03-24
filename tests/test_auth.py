@@ -37,22 +37,16 @@ class TestAuthentication(unittest.TestCase):
             'password': 'test'
         }
 
-        result = self.target.register_user(input)
-
-        self.assertTrue(isinstance(result, AuthenticationResponse))
-        self.assertFalse(result.success)
-        self.assertIsNotNone(result.message)
+        with self.assertRaises(Exception):
+            self.target.register_user(input)
 
     def test_authentication_register_user_no_password(self):
         input = {
             'username': 'test'
         }
 
-        result = self.target.register_user(input)
-
-        self.assertTrue(isinstance(result, AuthenticationResponse))
-        self.assertFalse(result.success)
-        self.assertIsNotNone(result.message)
+        with self.assertRaises(Exception):
+            self.target.register_user(input)
 
     @mock.patch('application.auth.authentication.create_user_token')
     def test_authentication_token_factory_raise_exception(self, mock_token_factory):
@@ -63,11 +57,8 @@ class TestAuthentication(unittest.TestCase):
 
         mock_token_factory.side_effect = ValueError('test')
 
-        result = self.target.register_user(input)
-
-        mock_token_factory.assert_called()
-        self.assertTrue(isinstance(result, AuthenticationResponse))
-        self.assertFalse(result.success)
+        with self.assertRaises(Exception):
+            self.target.register_user(input)
 
     def test_authentication_register_user(self):
         input = {
@@ -77,8 +68,6 @@ class TestAuthentication(unittest.TestCase):
 
         result = self.target.register_user(input)
 
-        json_response = result.to_json()
-
         self.assertTrue(isinstance(result, AuthenticationResponse))
 
     def test_authentication_login_no_username(self):
@@ -86,20 +75,16 @@ class TestAuthentication(unittest.TestCase):
             'password': 'test'
         }
 
-        result = self.target.login(input)
-
-        self.assertTrue(isinstance(result, AuthenticationResponse))
-        self.assertFalse(result.success)
+        with self.assertRaises(Exception):
+            self.target.login(input)
 
     def test_authentication_login_no_password(self):
         input = {
             'username': 'test'
         }
 
-        result = self.target.login(input)
-
-        self.assertTrue(isinstance(result, AuthenticationResponse))
-        self.assertFalse(result.success)
+        with self.assertRaises(Exception):
+            self.target.login(input)
 
     def test_authentication_login(self):
         input = {

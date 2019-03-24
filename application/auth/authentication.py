@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
 from .user import User
 from .token_factory import create_user_token
+from .exceptions import AuthenticationError, AccountAlreadyExistsError
 
 
 class AuthenticationResponse():
@@ -41,16 +42,12 @@ class Authentication():
                     token=create_user_token(user)
                 )
             else:
-                return AuthenticationResponse(
-                    False,
+                raise AccountAlreadyExistsError(
                     'An account already exists with that username!'
                 )
         except Exception as e:
             db.session.rollback()
-            return AuthenticationResponse(
-                False,
-                str(e)
-            )
+            raise
 
     def login(self, post_data):
         try:
@@ -63,12 +60,8 @@ class Authentication():
                     token=create_user_token(user)
                 )
             else:
-                return AuthenticationResponse(
-                    False,
+                raise AuthenticationError(
                     'Account could not be authenticated at this time.'
                 )
         except Exception as e:
-            return AuthenticationResponse(
-                False,
-                str(e)
-            )
+            raise
