@@ -65,3 +65,7 @@ def login_user(post_data):
             )
     except Exception as e:
         raise
+
+
+def authenticate_user(post_data):
+    pass

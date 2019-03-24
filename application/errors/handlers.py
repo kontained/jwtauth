@@ -1,10 +1,12 @@
-from flask import jsonify
+from flask import jsonify, current_app
 from application.auth.exceptions import AuthenticationError, AccountAlreadyExistsError
 from . import errors_blueprint
 
 
 @errors_blueprint.app_errorhandler(AccountAlreadyExistsError)
 def handle_account_already_exists_error(error):
+    current_app.logger.error(error)
+    print(error)
     response = jsonify(
         {
             'message': 'Account already exists.'
@@ -16,6 +18,7 @@ def handle_account_already_exists_error(error):
 
 @errors_blueprint.app_errorhandler(AuthenticationError)
 def handle_authentication_error(error):
+    current_app.logger.error(error)
     response = jsonify(
         {
             'message': 'Account could not be authenticated.'
@@ -27,6 +30,7 @@ def handle_authentication_error(error):
 
 @errors_blueprint.app_errorhandler(Exception)
 def handle_exception(error):
+    current_app.logger.error(error)
     response = jsonify(
         {
             'message': 'Internal server error.'
@@ -38,6 +42,7 @@ def handle_exception(error):
 
 @errors_blueprint.app_errorhandler(404)
 def handle_not_found(error):
+    current_app.logger.error(error)
     response = jsonify(
         {
             'message': 'Not found.'

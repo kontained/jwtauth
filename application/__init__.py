@@ -1,3 +1,6 @@
+import os
+import logging
+from logging.handlers import TimedRotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -16,5 +19,20 @@ def create_app(config_class=Config):
 
     from application.errors import errors_blueprint
     application.register_blueprint(errors_blueprint)
+
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+
+    file_handler = TimedRotatingFileHandler(config_class.LOG_FILE, when='D', interval=1)
+
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s'
+        ' [in %(pathname)s:%(lineno)d'
+    ))
+    file_handler.setLevel(logging.INFO)
+
+    application.logger.addHandler(file_handler)
+    application.logger.setLevel(logging.INFO)
+    application.logger.info('Auth API started!')
 
     return application
