@@ -44,7 +44,7 @@ def register_user(post_data):
             raise AccountAlreadyExistsError(
                 'An account already exists with that username!'
             )
-    except Exception as e:
+    except:
         db.session.rollback()
         raise
 
@@ -63,7 +63,7 @@ def login_user(post_data):
             raise AuthenticationError(
                 'Account could not be authenticated at this time.'
             )
-    except Exception as e:
+    except:
         raise
 
 
