@@ -50,22 +50,22 @@ def register_user(post_data):
 
 
 def login_user(post_data):
-    try:
-        user = User.query.filter_by(
-            username=post_data.get('username')).first()
+    user = User.query.filter_by(
+        username=post_data.get('username')).first()
 
-        if user and check_password_hash(user.password_hash, post_data.get('password')):
-            return AuthenticationResponse(
-                success=True,
-                token=create_user_token(user)
-            )
-        else:
-            raise AuthenticationError(
-                'Account could not be authenticated at this time.'
-            )
-    except:
-        raise
+    if user and check_password_hash(user.password_hash, post_data.get('password')):
+        return AuthenticationResponse(
+            success=True,
+            token=create_user_token(user)
+        )
+    else:
+        raise AuthenticationError(
+            'Account could not be authenticated at this time.'
+        )
 
 
-def authenticate_user(post_data):
-    pass
+def authenticate_user(header):
+    if header:
+        pass
+    else:
+        raise AuthenticationError('Authentication header not found.')

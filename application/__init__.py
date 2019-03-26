@@ -15,7 +15,7 @@ def create_app(config_class=Config):
 
     # have to import here, so db is importable
     from application.auth import auth_blueprint
-    application.register_blueprint(auth_blueprint, url_prefix='/auth')
+    application.register_blueprint(auth_blueprint)
 
     from application.errors import errors_blueprint
     application.register_blueprint(errors_blueprint)
